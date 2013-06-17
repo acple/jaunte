@@ -200,31 +200,30 @@
 
 ;; キー作成関数/再帰呼び出し用
 (defun jaunte-make-key-internal (depth key)
-  (with-no-warnings ; local variables
-    (let (hints)
-      (catch 'jaunte-make-key-catch
-        (mapc #'(lambda (x)
-                  (if (< depth max-depth)
-                      (progn (when (= depth (1- max-depth))
-                               (setq count (1- count)))
-                             (setq hints (cons (cons x
-                                                     (jaunte-make-key-internal
-                                                      (1+ depth)
-                                                      (append key (list x))))
-                                               hints)))
-                    (setq hints (cons (cons x
-                                            (jaunte-make-overlay
-                                             (car overlays)
-                                             (concat key (list x))))
-                                      hints)
-                          overlays (cdr overlays)
-                          count (1+ count))
-                    (when (and flag (> count hint-length))
-                      (setq flag nil
-                            max-depth (1- max-depth))
-                      (throw 'jaunte-make-key-catch nil))))
-              jaunte-keys))
-      (nreverse hints))))
+  (let (hints)
+    (catch 'jaunte-make-key-catch
+      (mapc #'(lambda (x)
+                (if (< depth max-depth)
+                    (progn (when (= depth (1- max-depth))
+                             (setq count (1- count)))
+                           (setq hints (cons (cons x
+                                                   (jaunte-make-key-internal
+                                                    (1+ depth)
+                                                    (append key (list x))))
+                                             hints)))
+                  (setq hints (cons (cons x
+                                          (jaunte-make-overlay
+                                           (car overlays)
+                                           (concat key (list x))))
+                                    hints)
+                        overlays (cdr overlays)
+                        count (1+ count))
+                  (when (and flag (> count hint-length))
+                    (setq flag nil
+                          max-depth (1- max-depth))
+                    (throw 'jaunte-make-key-catch nil))))
+            jaunte-keys))
+    (nreverse hints)))
 
 ;; オーバーレイにキー情報を載せる
 (defun jaunte-make-overlay (overlay key)
@@ -311,3 +310,7 @@
 (provide 'jaunte)
 
 ;;; jaunte.el ends here
+;; Local Variables:
+;; coding: utf-8
+;; byte-compile-warnings: (not free-vars)
+;; End:
