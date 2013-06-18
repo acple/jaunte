@@ -170,13 +170,13 @@
                         (window-end (window-end)))
                     (while (< point window-end)
                       (let ((overlay (make-overlay point point)))
-                        (overlay-put overlay 'win window)
+                        (overlay-put overlay 'window window)
                         (setq overlays (cons overlay overlays)))
                       (jaunte-forward-point)
                       (setq point (point)))
                     (when (pos-visible-in-window-p window-end)
                       (let ((overlay (make-overlay point point)))
-                        (overlay-put overlay 'win window)
+                        (overlay-put overlay 'window window)
                         (overlay-put overlay 'jaunte-overlay-eob t)
                         (setq overlays (cons overlay overlays))))))
               (window-list nil 'minibuf (frame-first-window)))))
@@ -227,7 +227,7 @@
 
 ;; オーバーレイにキー情報を載せる
 (defun jaunte-make-overlay (overlay key)
-  (let ((window (overlay-get overlay 'win))
+  (let ((window (overlay-get overlay 'window))
         (point (overlay-start overlay))
         (length (length key))
         column)
@@ -254,7 +254,8 @@
                       (when (overlay-get overlay 'jaunte-overlay-eob)
                         (overlay-put overlay 'after-string
                                      (overlay-get overlay 'display))
-                        (overlay-put overlay 'display nil)))
+                        (overlay-put overlay 'display nil)
+                        (overlay-put overlay 'jaunte-overlay-eob nil)))
                   (overlays-in (point-max) (point-max))))
         (window-list nil 'minibuf)))
 
@@ -277,7 +278,7 @@
 
 ;; ジャンプする
 (defun jaunte-to ()
-  (select-window (overlay-get jaunte-hints 'win))
+  (select-window (overlay-get jaunte-hints 'window))
   (goto-char (overlay-start jaunte-hints))
   (delete-overlay jaunte-hints)
   (setq jaunte-hints nil))
