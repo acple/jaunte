@@ -184,14 +184,14 @@
 
 ;; ユニークなキーを作成する
 (defun jaunte-make-key (overlays)
-  (let ((flag t)
+  (let (count
+        (flag t)
         (max-depth 1)
-        (count 1)
         (key-length (length jaunte-keys))
         (hint-length (length overlays)))
     (while (< (expt key-length max-depth) hint-length)
-      (setq count (1+ (expt key-length max-depth))
-            max-depth (1+ max-depth)))
+      (setq max-depth (1+ max-depth)))
+    (setq count (expt key-length (1- max-depth)))
     (save-excursion
       (save-window-excursion
         (goto-char (window-start))
@@ -201,16 +201,16 @@
 ;; キー作成関数/再帰呼び出し用
 (defun jaunte-make-key-internal (depth key)
   (let (hints)
+    (when (eq depth max-depth)
+      (setq count (1- count)))
     (catch 'jaunte-make-key-catch
       (mapc #'(lambda (x)
                 (if (< depth max-depth)
-                    (progn (when (= depth (1- max-depth))
-                             (setq count (1- count)))
-                           (setq hints (cons (cons x
-                                                   (jaunte-make-key-internal
-                                                    (1+ depth)
-                                                    (append key (list x))))
-                                             hints)))
+                    (setq hints (cons (cons x
+                                            (jaunte-make-key-internal
+                                             (1+ depth)
+                                             (append key (list x))))
+                                      hints))
                   (setq hints (cons (cons x
                                           (jaunte-make-overlay
                                            (car overlays)
@@ -218,7 +218,7 @@
                                     hints)
                         overlays (cdr overlays)
                         count (1+ count))
-                  (when (and flag (> count hint-length))
+                  (when (and flag (eq count hint-length))
                     (setq flag nil
                           max-depth (1- max-depth))
                     (throw 'jaunte-make-key-catch nil))))
