@@ -200,9 +200,9 @@
 ;; キー作成関数/再帰呼び出し用
 (defun jaunte-make-key-internal (depth key)
   (let (hints)
-    (when (eq depth max-depth)
-      (setq count (1- count)))
     (catch 'jaunte-make-key-catch
+      (when (eq depth max-depth)
+        (setq count (1- count)))
       (mapc #'(lambda (x)
                 (if (< depth max-depth)
                     (setq hints (cons (cons x
