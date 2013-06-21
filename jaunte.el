@@ -142,15 +142,15 @@
   (while (progn
            (forward-thing jaunte-hint-unit)
            (when (re-search-forward "\\w" nil 'eob)
-             (backward-char))
-           (catch 'jaunte-forward-point-catch
-             (when (invisible-p (point))
-               (throw 'jaunte-forward-point-catch t))
-             (mapc #'(lambda (overlay)
-                       (when (overlay-get overlay 'display)
-                         (throw 'jaunte-forward-point-catch t)))
-                   (overlays-at (point)))
-             nil)))
+             (backward-char)
+             (catch 'jaunte-forward-point-catch
+               (when (invisible-p (point))
+                 (throw 'jaunte-forward-point-catch t))
+               (mapc #'(lambda (overlay)
+                         (when (overlay-get overlay 'display)
+                           (throw 'jaunte-forward-point-catch t)))
+                     (overlays-at (point)))
+               nil))))
   (point))
 
 ;; バッファを走査してオーバーレイを作成する
