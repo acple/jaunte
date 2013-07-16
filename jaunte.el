@@ -155,7 +155,8 @@
 
 ;; バッファを走査してオーバーレイを作成する
 (defun jaunte-scan ()
-  (let (overlays)
+  (let (overlays
+        (inhibit-changing-match-data t))
     (save-excursion
       (save-window-excursion
         (mapc #'(lambda (window)
