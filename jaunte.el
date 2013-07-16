@@ -184,7 +184,6 @@
 ;; ユニークなキーを作成する
 (defun jaunte-make-key (overlays)
   (let (count
-        (flag t)
         (max-depth 1)
         (key-length (length jaunte-keys))
         (hint-length (length overlays)))
@@ -217,9 +216,8 @@
                                     hints)
                         overlays (cdr overlays)
                         count (1+ count))
-                  (when (and flag (eq count hint-length))
-                    (setq flag nil
-                          max-depth (1- max-depth))
+                  (when (eq count hint-length)
+                    (setq max-depth (1- max-depth))
                     (throw 'jaunte-make-key-catch nil))))
             jaunte-keys))
     (nreverse hints)))
@@ -305,7 +303,6 @@
     (jaunte-initialize)
     (jaunte-make-key (jaunte-scan))
     (jaunte-do)))
-
 
 (provide 'jaunte)
 
