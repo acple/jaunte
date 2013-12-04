@@ -83,7 +83,7 @@
   "Emacs Hit a Hint"
   :group 'convenience)
 
-(defconst jaunte-keys-default "jklasdfghyuiopwertmzxcvb")
+(defconst jaunte-keys-default "jklasdfghuopwertmzxcvb")
 
 (defcustom jaunte-keys nil
   "jaunte keys"
