@@ -90,10 +90,10 @@
   :type 'string
   :group 'jaunte
   :set (lambda (symbol value)
-         (eval (list 'setq-default symbol
-                     (if (<= 3 (length value))
-                         value
-                       jaunte-keys-default)))))
+         (set-default symbol
+                      (if (<= 3 (length value))
+                          value
+                        jaunte-keys-default))))
 
 (defcustom jaunte-hint-unit 'word
   "jaunte hint unit\nCan set this parameter same as `thing-at-point'"
